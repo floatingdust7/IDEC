@@ -95,6 +95,10 @@ class IDEC(nn.Module):
         if path == '':
             pretrain_ae(self.ae)
         # load pretrain weights
+        '''
+        加载之前保存的预训练权重。它使用 torch.load 函数从文件中读取预训练的权重（假设是PyTorch的state_dict格式），
+        然后使用 load_state_dict 方法将这些权重加载到自编码器 self.ae 中。
+        '''
         self.ae.load_state_dict(torch.load(self.pretrain_path))
         print('load pretrained ae from', path)
 
@@ -192,6 +196,7 @@ def train_idec():
 
             # evaluate clustering performance
             y_pred = tmp_q.cpu().numpy().argmax(1)
+            '''计算标签变化的比例，即聚类结果的不稳定性'''
             delta_label = np.sum(y_pred != y_pred_last).astype(
                 np.float32) / y_pred.shape[0]
             y_pred_last = y_pred
